@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    image: mariadb:10
+    restart: unless-stopped
+    container_name: cypht-db
+    volumes:
+      - /sharedfolders/dockerdata/cypht/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=cypht_password
+      - MYSQL_DATABASE=cypht
+      - MYSQL_USER=cypht
+      - MYSQL_PASSWORD=cypht_password
+  cypht:
+    image: sailfrog/cypht-docker:latest
+    container_name: cypht
+    restart: unless-stopped
+    volumes:
+      - /sharedfolders/dockerdata/cypht/users:/var/lib/hm3/users
+    ports:
+      - "45642:80"
+    environment:
+      - CYPHT_AUTH_USERNAME=admin
+      - CYPHT_AUTH_PASSWORD=cypht_password
+      - CYPHT_DB_CONNECTION_TYPE=host
+      - CYPHT_DB_HOST=db
+      - CYPHT_DB_NAME=cypht
+      - CYPHT_DB_USER=cypht
+      - CYPHT_DB_PASS=cypht_password
+      - CYPHT_SESSION_TYPE=DB
+      - CYPHT_ADMIN_USERS=admin
